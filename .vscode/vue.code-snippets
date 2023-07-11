@@ -1,0 +1,20 @@
+{
+  "Print to vt": {
+    "scope": "vue",
+    "prefix": "vt",
+    "body": [
+      "<script setup lang=\"tsx\">",
+      "$1",
+      "</script>",
+      "",
+      "<template>",
+      "\t<div></div>",
+      "</template>",
+      "",
+      "<style module lane=\"scss\">",
+      "",
+      "</style>"
+    ],
+    "description": "vue-tsx-template"
+  }
+}
