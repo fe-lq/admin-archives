@@ -1,7 +1,7 @@
 <script setup lang="tsx"></script>
 
 <template>
-  <div>page1</div>
+  <h3>This is page One</h3>
 </template>
 
 <style module lane="scss"></style>

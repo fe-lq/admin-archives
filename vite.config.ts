@@ -36,7 +36,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  base: `http://localhost:8090`,
   server: {
-    port: 8080
+    port: 8090,
+    cors: true,
+    origin: `http://localhost:8090`
   }
 })

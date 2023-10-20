@@ -1,14 +1,20 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+  "include": ["src"],
+  "exclude": ["src/**/__tests__/*", "node_modules"],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "jsxImportSource": "vue",
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"]
     },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.vitest.json"
-    }
-  ]
+    "module": "es2020",
+    "moduleResolution": "Node",
+    "strict": true,
+    "target": "ES6",
+    "esModuleInterop": true,
+    // 指定"types": []来禁用自动引入@types包。
+    "types": ["vite/client"]
+  }
 }
