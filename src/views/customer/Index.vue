@@ -1,7 +1,7 @@
-<script setup lang="tsx"></script>
+<script setup lang="ts"></script>
 
 <template>
-  <h3>这是Page2</h3>
+  <div>客户信息</div>
 </template>
 
 <style module lane="scss"></style>

@@ -7,15 +7,15 @@ import createRoutes from './router'
 
 export const provider = vueBridge({
   rootComponent: App,
-  appOptions: ({ basename }) => ({
-    el: '#app',
-    render: () => h(App),
-    router: createRoutes(basename)
-  }),
-  handleInstance: (vueInstance, { basename, appName, props }) => {
-    console.log(basename, appName, props)
-    // vueInstance.provide
-    // vueInstance.use(router)
+  appOptions: () => {
+    return {
+      el: '#app',
+      render: () => h(App)
+    }
+  },
+  handleInstance: (vueInstance, { basename, dom, appName, props, appRenderInfo }) => {
+    console.log(basename, dom, appName, props, appRenderInfo)
+    vueInstance.use(createRoutes(basename))
     // vueInstance.provide(stateSymbol, createState());
   }
 })
@@ -23,5 +23,6 @@ export const provider = vueBridge({
 if (!window.__GARFISH__) {
   // 非微前端环境直接运行
   const app = createApp(App)
+  app.use(createRoutes('/archives'))
   app.mount('#app')
 }

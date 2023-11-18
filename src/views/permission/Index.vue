@@ -1,4 +1,7 @@
 <script setup lang="ts"></script>
+
 <template>
-  <RouterView />
+  <div>权限</div>
 </template>
+
+<style module lane="scss"></style>
