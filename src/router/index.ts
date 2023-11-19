@@ -26,12 +26,6 @@ const createRoutes = (baseUrl: string) => {
       }
     ]
   })
-  router.beforeEach((to, from) => {
-    // ...
-    console.log(to, from, '导航了')
-    // 返回 false 以取消导航
-    return true
-  })
   return router
 }
 
