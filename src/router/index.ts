@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Users from '@/views/users/Index.vue'
-import Permission from '@/views/permission/Index.vue'
-import Customer from '@/views/customer/Index.vue'
+// import PageNotFound from '@/views/PageNotFound.vue'
 
 const createRoutes = (baseUrl: string) => {
   const router = createRouter({
@@ -10,20 +8,26 @@ const createRoutes = (baseUrl: string) => {
       {
         path: '/users',
         name: 'users',
-        component: Users
+        component: () => import('@/views/users/Index.vue')
       },
       {
         path: '/permission',
         name: 'permission',
-        component: Permission
-        // component: () => import('@/views/permission/Index.vue')
+        component: () => import('@/views/permission/Index.vue'),
+        children: [
+          {
+            path: 'role',
+            name: 'role',
+            component: () => import('@/views/Role.vue')
+          }
+        ]
       },
       {
         path: '/customer',
         name: 'customer',
-        component: Customer
-        // component: () => import('@/views/customer/Index.vue')
+        component: () => import('@/views/customer/Index.vue')
       }
+      // { path: '/:pathMatch(.*)*', name: 'notFound', component: PageNotFound }
     ]
   })
   return router
