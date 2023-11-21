@@ -15,7 +15,7 @@ module.exports = {
   },
   rules: {
     'prefer-const': 'error',
-    'vue/multi-word-component-names': ['warn', { ignores: ['Index'] }],
+    'vue/multi-word-component-names': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error'
   }

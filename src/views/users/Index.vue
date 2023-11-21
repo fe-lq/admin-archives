@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import SliderBrawer from './components/SliderDrawer.vue'
 
 interface FormType {
   userName: string
   phone: string
   status?: boolean
 }
+const drawerVisible = ref(false)
 const formInline = reactive<FormType>({
   userName: '',
   phone: ''
@@ -42,31 +44,43 @@ const onSubmit = () => {
   console.log(formInline)
   console.log('submit!')
 }
+
+const handleClick = () => {}
 </script>
 
 <template>
-  <el-form :inline="true" :model="formInline" class="form-container">
-    <el-form-item label="用户名">
-      <el-input v-model="formInline.userName" placeholder="请输入用户名" clearable />
-    </el-form-item>
-    <el-form-item label="手机号">
-      <el-input v-model="formInline.phone" placeholder="请输入手机号" clearable />
-    </el-form-item>
-    <el-form-item label="状态">
-      <el-select v-model="formInline.status" placeholder="请选择状态" clearable>
-        <el-option label="启用" :value="true" />
-        <el-option label="禁用" :value="false" />
-      </el-select>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onSubmit">查询</el-button>
-    </el-form-item>
-  </el-form>
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="address" label="Address" />
-  </el-table>
+  <ElForm :inline="true" :model="formInline" class="form-container">
+    <ElFormItem label="用户名">
+      <ElInput v-model="formInline.userName" placeholder="请输入用户名" clearable />
+    </ElFormItem>
+    <ElFormItem label="手机号">
+      <ElInput v-model="formInline.phone" placeholder="请输入手机号" clearable />
+    </ElFormItem>
+    <ElFormItem label="状态">
+      <ElSelect v-model="formInline.status" placeholder="请选择状态" clearable>
+        <ElOption label="启用" :value="true" />
+        <ElOption label="禁用" :value="false" />
+      </ElSelect>
+    </ElFormItem>
+    <ElFormItem>
+      <ElButton type="primary" @click="onSubmit">查询</ElButton>
+      <ElButton type="primary" @click="onSubmit">重置</ElButton>
+      <ElButton type="primary" @click="drawerVisible = true">新增</ElButton>
+    </ElFormItem>
+  </ElForm>
+  <ElTable :data="tableData" style="width: 100%">
+    <ElTableColumn prop="date" label="时间" width="180" />
+    <ElTableColumn prop="userName" label="用户名" width="180" />
+    <ElTableColumn prop="role" label="角色" width="120" />
+    <ElTableColumn prop="address" label="地址" />
+    <ElTableColumn prop="address" label="操作">
+      <template #default>
+        <ElButton type="primary" size="small" @click="handleClick">编辑</ElButton>
+        <ElButton type="danger" size="small">删除</ElButton>
+      </template>
+    </ElTableColumn>
+  </ElTable>
+  <SliderBrawer v-model:visible="drawerVisible" />
 </template>
 
 <style lang="scss" scoped>

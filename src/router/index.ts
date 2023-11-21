@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import PageNotFound from '@/views/PageNotFound.vue'
+import PageNotFound from '@/views/no-page/Index.vue'
 
 const createRoutes = (baseUrl: string) => {
   const router = createRouter({
@@ -26,8 +26,8 @@ const createRoutes = (baseUrl: string) => {
         path: '/customer',
         name: 'customer',
         component: () => import('@/views/customer/Index.vue')
-      }
-      // { path: '/:pathMatch(.*)*', name: 'notFound', component: PageNotFound }
+      },
+      { path: '/:pathMatch(.*)*', name: 'notFound', component: PageNotFound }
     ]
   })
   return router
