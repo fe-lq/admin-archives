@@ -1,11 +1,11 @@
 import { h, createApp } from 'vue'
 // import { createPinia } from 'pinia'
-import ElementPlus from 'element-plus'
+// import ElementPlus from 'element-plus'
 import { vueBridge } from '@garfish/bridge-vue-v3'
 
 import App from './App.vue'
 import createRoutes from './router'
-import '@/scss/element.scss'
+import './scss/element.scss'
 
 export const provider = vueBridge({
   rootComponent: App,
@@ -27,6 +27,5 @@ if (!window.__GARFISH__) {
   // 非微前端环境直接运行
   const app = createApp(App)
   app.use(createRoutes('/archives'))
-  app.use(ElementPlus)
   app.mount('#app')
 }

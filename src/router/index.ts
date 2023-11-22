@@ -13,14 +13,7 @@ const createRoutes = (baseUrl: string) => {
       {
         path: '/permission',
         name: 'permission',
-        component: () => import('@/views/permission/Index.vue'),
-        children: [
-          {
-            path: 'role',
-            name: 'role',
-            component: () => import('@/views/Role.vue')
-          }
-        ]
+        component: () => import('@/views/permission/Index.vue')
       },
       {
         path: '/customer',

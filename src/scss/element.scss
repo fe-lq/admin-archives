@@ -1,6 +1,17 @@
-.el-button--primary {
-  --el-button-hover-bg-color: #268af2;
-}
-.el-button--small {
-  --el-button-size: 36px;
+:root {
+  .el-button--primary {
+    --el-button-hover-bg-color: #1383f8;
+  }
+  .el-button--danger {
+    --el-button-hover-bg-color: #fb3f3f;
+  }
+  .el-drawer__header {
+    margin-bottom: 0;
+    & > :first-child {
+      font-weight: 600;
+    }
+  }
+  .el-drawer__footer {
+    padding-top: 0;
+  }
 }

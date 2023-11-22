@@ -31,6 +31,13 @@ export default defineConfig({
       ]
     })
   ],
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `@use "./src/scss/element.scss";`
+  //     }
+  //   }
+  // },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
