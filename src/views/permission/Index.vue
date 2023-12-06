@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import SliderBrawer from './components/SliderDrawer.vue'
-import { ElSpace } from 'element-plus'
+import { Modal, message } from 'ant-design-vue'
 
 interface FormType {
   userName: string
@@ -33,6 +33,25 @@ const tableData = [
   }
 ]
 
+const columns = [
+  {
+    title: '角色名称',
+    dataIndex: 'role'
+  },
+  {
+    title: '成员',
+    dataIndex: 'users'
+  },
+  {
+    title: '权限范围',
+    dataIndex: 'permissions'
+  },
+  {
+    title: '操作',
+    dataIndex: 'operate'
+  }
+]
+
 const onSubmit = () => {
   console.log(searchForm)
   console.log('submit!')
@@ -43,87 +62,62 @@ const handleClick = (row: any) => {
 }
 
 const handleDelete = (row: any) => {
-  ElMessageBox.confirm('确认是否要删除当前数据？', {
-    type: 'warning'
-  })
-    .then(() => {
+  Modal.confirm({
+    title: '提示',
+    content: '确认是否要删除当前数据？',
+    onCancel: () => {
+      message.warning('操作已取消')
+    },
+    onOk: () => {
       console.log(row)
-      ElMessage({
-        type: 'success',
-        message: '操作成功'
-      })
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'warning',
-        message: '操作已取消'
-      })
-    })
-}
-const handleSizeChange = (val: number) => {
-  console.log('size', val)
-}
-const handleCurrentChange = (val: number) => {
-  console.log('current', val)
+      message.success('操作成功')
+    }
+  })
 }
 </script>
 
 <template>
-  <ElForm :inline="true" :model="searchForm" class="form-container">
-    <ElFormItem label="用户名">
-      <ElInput v-model="searchForm.userName" placeholder="请输入用户名" clearable />
-    </ElFormItem>
-    <ElFormItem label="角色">
-      <ElInput v-model="searchForm.role" placeholder="请输入角色名称" clearable />
-    </ElFormItem>
-    <ElFormItem>
-      <ElButton type="primary" @click="onSubmit">查询</ElButton>
-      <ElButton @click="onSubmit">重置</ElButton>
-    </ElFormItem>
-    <ElFormItem>
-      <ElButton type="primary" @click="drawerVisible = true">新增</ElButton>
-    </ElFormItem>
-  </ElForm>
-  <ElTable :data="tableData" style="width: 100%">
-    <ElTableColumn prop="role" label="角色名称" width="120" />
-    <ElTableColumn prop="users" label="成员">
-      <template #default="scope">
-        <ElSpace wrap>
-          <ElTag v-for="user in scope.row.users" :key="user">{{ user }}</ElTag>
-        </ElSpace>
+  <a-form :inline="true" :model="searchForm" class="form-container">
+    <a-form-item label="用户名">
+      <a-input v-model="searchForm.userName" placeholder="请输入用户名" clearable />
+    </a-form-item>
+    <a-form-item label="角色">
+      <a-input v-model="searchForm.role" placeholder="请输入角色名称" clearable />
+    </a-form-item>
+    <a-form-item>
+      <a-button type="primary" @click="onSubmit">查询</a-button>
+      <a-button @click="onSubmit">重置</a-button>
+    </a-form-item>
+    <a-form-item>
+      <a-button type="primary" @click="drawerVisible = true">新增</a-button>
+    </a-form-item>
+  </a-form>
+  <a-table :columns="columns" :data-source="tableData">
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.dataIndex === 'users'">
+        <a-space wrap>
+          <a-tag v-for="user in record.users" :key="user">{{ user }}</a-tag>
+        </a-space>
       </template>
-    </ElTableColumn>
-    <ElTableColumn prop="permissions" label="权限范围">
-      <template #default="scope">
-        {{ scope.row.permissions.join(', ') }}
-      </template>
-    </ElTableColumn>
-    <ElTableColumn label="操作" width="180">
-      <template #default="scope">
-        <ElButton type="primary" size="small" @click="handleClick(scope.row)">编辑</ElButton>
-        <ElButton type="danger" size="small" @click="handleDelete(scope.row)">删除</ElButton>
-      </template>
-    </ElTableColumn>
-  </ElTable>
-  <div style="padding: 10px 0">
-    <el-pagination
-      :current-page="1"
-      :page-size="10"
-      :page-sizes="[100, 200, 300, 400]"
-      small
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </div>
+      <template v-if="column.dataIndex === 'permissions'">
+        {{ record.permissions.join(', ') }}</template
+      >
+      <template v-if="column.dataIndex === 'operate'">
+        <a-button type="primary" size="small" @click="handleClick(record)">编辑</a-button>
+        <a-button type="primary" danger size="small" @click="handleDelete(record)"
+          >删除</a-button
+        ></template
+      >
+    </template>
+  </a-table>
+
   <SliderBrawer :visible="drawerVisible" @close="drawerVisible = false" />
 </template>
 
 <style lang="scss" scoped>
 .form-container {
-  .el-input {
-    --el-input-width: 220px;
-  }
+  // .el-input {
+  //   --el-input-width: 220px;
+  // }
 }
 </style>

@@ -45,51 +45,52 @@ const handleConfirm = () => {
 }
 </script>
 <template>
-  <ElDrawer v-model="visible" title="添加用户" direction="rtl">
-    <ElForm :model="form" label-width="80px" label-position="left" class="form-container">
-      <ElFormItem label="用户名">
-        <ElInput v-model="form.userName" placeholder="请输入用户名" />
-      </ElFormItem>
-      <ElFormItem label="手机号">
-        <ElInput v-model="form.phone" placeholder="请输入手机号" />
-      </ElFormItem>
-      <ElFormItem label="密码">
-        <ElInput v-model="form.password" type="password" placeholder="请输入密码" show-password />
-      </ElFormItem>
-      <ElFormItem label="邮箱">
-        <ElInput v-model="form.email" placeholder="请输入邮箱" />
-      </ElFormItem>
-      <ElFormItem label="角色">
-        <ElSelect v-model="form.role" placeholder="请选择角色">
-          <ElOption label="超级管理员" :value="0" />
-          <ElOption label="管理员" :value="1" />
-          <ElOption label="角色1" :value="2" />
-        </ElSelect>
-      </ElFormItem>
-      <ElFormItem label="状态">
-        <ElSelect v-model="form.status" placeholder="请选择状态">
-          <ElOption label="启用" :value="true" />
-          <ElOption label="禁用" :value="false" />
-        </ElSelect>
-      </ElFormItem>
-    </ElForm>
+  <a-drawer v-model="visible" title="添加用户" direction="rtl">
+    <a-form :model="form" label-width="80px" label-position="left" class="form-container">
+      <a-form-item label="用户名">
+        <a-input v-model="form.userName" placeholder="请输入用户名" />
+      </a-form-item>
+      <a-form-item label="手机号">
+        <a-input v-model="form.phone" placeholder="请输入手机号" />
+      </a-form-item>
+      <a-form-item label="密码">
+        <a-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
+      </a-form-item>
+      <a-form-item label="邮箱">
+        <a-input v-model="form.email" placeholder="请输入邮箱" />
+      </a-form-item>
+      <a-form-item label="角色">
+        <a-select v-model="form.role" placeholder="请选择角色">
+          <a-select-option label="超级管理员" :value="0" />
+          <a-select-option label="管理员" :value="1" />
+          <a-select-option label="角色1" :value="2" />
+        </a-select>
+      </a-form-item>
+      <a-form-item label="状态">
+        <a-select v-model="form.status" placeholder="请选择状态">
+          <a-select-option label="启用" :value="true" />
+          <a-select-option label="禁用" :value="false" />
+        </a-select>
+      </a-form-item>
+    </a-form>
     <template #footer>
       <div style="flex: auto">
-        <ElButton @click="handleCancel">取消</ElButton>
-        <ElButton type="primary" @click="handleConfirm">确认</ElButton>
+        <a-button @click="handleCancel">取消</a-button>
+        <a-button type="primary" @click="handleConfirm">确认</a-button>
       </div>
     </template>
-  </ElDrawer>
+  </a-drawer>
 </template>
 
 <style scoped lang="scss">
 .form-container {
-  .el-input {
-    --el-input-width: 220px;
-  }
+  margin-bottom: 10px;
+  // .el-input {
+  //   --el-input-width: 220px;
+  // }
 
-  .el-select {
-    width: 220px;
-  }
+  // .el-select {
+  //   width: 220px;
+  // }
 }
 </style>

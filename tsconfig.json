@@ -17,6 +17,6 @@
     "target": "ES6",
     "esModuleInterop": true,
     // 指定"types": []来禁用自动引入@types包。
-    "types": ["vite/client", "element-plus/global"]
+    "types": ["vite/client", "ant-design-vue/typings/global"]
   }
 }

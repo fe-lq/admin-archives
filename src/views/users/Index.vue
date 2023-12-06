@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import SliderBrawer from './components/SliderDrawer.vue'
+import { Modal, message } from 'ant-design-vue'
 
 interface FormType {
   userName: string
@@ -52,96 +53,99 @@ const onSubmit = () => {
   console.log('submit!')
 }
 
+const columns = [
+  {
+    title: '创建时间',
+    dataIndex: 'date'
+  },
+  {
+    title: '用户名',
+    dataIndex: 'userName'
+  },
+  {
+    title: '角色',
+    dataIndex: 'role'
+  },
+  {
+    title: '状态',
+    dataIndex: 'status'
+  },
+  {
+    title: '手机号',
+    dataIndex: 'phone'
+  },
+  {
+    title: '操作',
+    dataIndex: 'operate'
+  }
+]
+
 const handleClick = () => {}
 
 const handleDelete = () => {
-  ElMessageBox.confirm('确认是否要删除当前数据？', {
-    type: 'warning'
+  Modal.confirm({
+    title: '提示',
+    content: '确认是否要删除当前数据？',
+    onCancel: () => {
+      message.warning('操作已取消')
+    },
+    onOk: () => {
+      message.success('操作成功')
+    }
   })
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '操作成功'
-      })
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'warning',
-        message: '操作已取消'
-      })
-    })
-}
-const handleSizeChange = (val: number) => {
-  console.log('size', val)
-}
-const handleCurrentChange = (val: number) => {
-  console.log('current', val)
 }
 </script>
 
 <template>
-  <ElForm :inline="true" :model="formInline" class="form-container">
-    <ElFormItem label="用户名">
-      <ElInput v-model="formInline.userName" placeholder="请输入用户名" clearable />
-    </ElFormItem>
-    <ElFormItem label="手机号">
-      <ElInput v-model="formInline.phone" placeholder="请输入手机号" clearable />
-    </ElFormItem>
-    <ElFormItem label="状态">
-      <ElSelect v-model="formInline.status" placeholder="请选择状态" clearable>
-        <ElOption label="启用" :value="true" />
-        <ElOption label="禁用" :value="false" />
-      </ElSelect>
-    </ElFormItem>
-    <ElFormItem>
-      <ElButton type="primary" @click="onSubmit">查询</ElButton>
-      <ElButton @click="onSubmit">重置</ElButton>
-    </ElFormItem>
-    <ElFormItem>
-      <ElButton type="primary" @click="drawerVisible = true">新增</ElButton>
-    </ElFormItem>
-  </ElForm>
-  <ElTable :data="tableData" style="width: 100%">
-    <ElTableColumn prop="date" label="创建时间" width="180" />
-    <ElTableColumn prop="userName" label="用户名" width="180" />
-    <ElTableColumn prop="role" label="角色" width="120" />
-    <ElTableColumn prop="status" label="状态">
-      <template #default="scope">
-        <ElTag v-if="scope.row.status" type="success">启用</ElTag>
-        <ElTag v-else type="danger">禁用</ElTag>
+  <a-form layout="inline" :model="formInline" class="form-container">
+    <a-form-item label="用户名">
+      <a-input v-model="formInline.userName" placeholder="请输入用户名" clearable />
+    </a-form-item>
+    <a-form-item label="手机号">
+      <a-input v-model="formInline.phone" placeholder="请输入手机号" clearable />
+    </a-form-item>
+    <a-form-item label="状态">
+      <a-select v-model="formInline.status" placeholder="请选择状态" clearable>
+        <a-select-option :value="true">启用</a-select-option>
+        <a-select-option :value="false">禁用</a-select-option>
+      </a-select>
+    </a-form-item>
+    <a-form-item>
+      <a-space>
+        <a-button type="primary" @click="onSubmit">查询</a-button>
+        <a-button @click="onSubmit">重置</a-button>
+      </a-space>
+    </a-form-item>
+    <a-form-item>
+      <a-button type="primary" @click="drawerVisible = true">新增</a-button>
+    </a-form-item>
+  </a-form>
+  <a-table :columns="columns" :data-source="tableData">
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.dataIndex === 'status'">
+        <a-tag v-if="record.status" color="success">启用</a-tag>
+        <a-tag v-else color="error">禁用</a-tag>
       </template>
-    </ElTableColumn>
-    <ElTableColumn prop="phone" label="手机号">
-      <template #default="scope">
-        {{ getPhone(scope.row.phone) }}
+      <template v-if="column.dataIndex === 'phone'">
+        {{ getPhone(record.phone) }}
       </template>
-    </ElTableColumn>
-    <ElTableColumn label="操作">
-      <template #default>
-        <ElButton type="primary" size="small" @click="handleClick">编辑</ElButton>
-        <ElButton type="danger" size="small" @click="handleDelete">删除</ElButton>
+      <template v-if="column.dataIndex === 'operate'">
+        <a-space>
+          <a-button type="primary" size="small" @click="handleClick">编辑</a-button>
+          <a-button type="primary" danger size="small" @click="handleDelete">删除</a-button>
+        </a-space>
       </template>
-    </ElTableColumn>
-  </ElTable>
-  <div style="padding: 10px 0">
-    <el-pagination
-      :current-page="1"
-      :page-size="10"
-      :page-sizes="[10, 20, 30, 40]"
-      small
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </div>
+    </template>
+  </a-table>
   <SliderBrawer v-model:visible="drawerVisible" />
 </template>
 
 <style lang="scss" scoped>
 .form-container {
-  .el-input {
-    --el-input-width: 220px;
+  margin-bottom: 10px;
+  .ant-input,
+  .ant-select {
+    width: 200px;
   }
 }
 </style>

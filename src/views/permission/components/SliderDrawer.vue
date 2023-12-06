@@ -28,43 +28,43 @@ const handleConfirm = () => {
 }
 </script>
 <template>
-  <ElDrawer :model-value="props.visible" title="添加角色" direction="rtl" @close="emit('close')">
-    <ElForm :model="form" label-width="80px" label-position="left" class="form-container">
-      <ElFormItem label="角色名称">
-        <ElInput v-model="form.role" placeholder="请输入角色名称" />
-      </ElFormItem>
-      <ElFormItem label="成员">
-        <ElSelect v-model="form.users" placeholder="请选择成员">
-          <ElOption label="超级管理员" :value="0" />
-          <ElOption label="管理员" :value="1" />
-          <ElOption label="角色1" :value="2" />
-        </ElSelect>
-      </ElFormItem>
-      <ElFormItem label="权限节点">
-        <ElSelect v-model="form.permissions" placeholder="请选择权限节点">
-          <ElOption label="超级管理员" :value="0" />
-          <ElOption label="管理员" :value="1" />
-          <ElOption label="角色1" :value="2" />
-        </ElSelect>
-      </ElFormItem>
-    </ElForm>
+  <a-drawer :model-value="props.visible" title="添加角色" direction="rtl" @close="emit('close')">
+    <a-form :model="form" label-width="80px" label-position="left" class="form-container">
+      <a-form-item label="角色名称">
+        <a-input v-model="form.role" placeholder="请输入角色名称" />
+      </a-form-item>
+      <a-form-item label="成员">
+        <a-select v-model="form.users" placeholder="请选择成员">
+          <a-select-option label="超级管理员" :value="0" />
+          <a-select-option label="管理员" :value="1" />
+          <a-select-option label="角色1" :value="2" />
+        </a-select>
+      </a-form-item>
+      <a-form-item label="权限节点">
+        <a-select v-model="form.permissions" placeholder="请选择权限节点">
+          <a-select-option label="超级管理员" :value="0" />
+          <a-select-option label="管理员" :value="1" />
+          <a-select-option label="角色1" :value="2" />
+        </a-select>
+      </a-form-item>
+    </a-form>
     <template #footer>
       <div style="flex: auto">
-        <ElButton @click="emit('close')">取消</ElButton>
-        <ElButton type="primary" @click="handleConfirm">确认</ElButton>
+        <a-button @click="emit('close')">取消</a-button>
+        <a-button type="primary" @click="handleConfirm">确认</a-button>
       </div>
     </template>
-  </ElDrawer>
+  </a-drawer>
 </template>
 
 <style scoped lang="scss">
 .form-container {
-  .el-input {
-    --el-input-width: 220px;
-  }
+  // .el-input {
+  //   --el-input-width: 220px;
+  // }
 
-  .el-select {
-    width: 220px;
-  }
+  // .el-select {
+  //   width: 220px;
+  // }
 }
 </style>
