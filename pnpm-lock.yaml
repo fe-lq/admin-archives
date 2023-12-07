@@ -12,8 +12,8 @@ dependencies:
     specifier: ^1.17.1
     version: 1.17.1(vue@3.3.4)
   ant-design-vue:
-    specifier: ^4.0.7
-    version: registry.npmmirror.com/ant-design-vue@4.0.7(vue@3.3.4)
+    specifier: ^4.0.6
+    version: registry.npmmirror.com/ant-design-vue@4.0.6(vue@3.3.4)
   axios:
     specifier: ^1.4.0
     version: 1.5.1
@@ -97,9 +97,6 @@ devDependencies:
   unplugin-auto-import:
     specifier: ^0.16.4
     version: 0.16.6
-  unplugin-icons:
-    specifier: ^0.16.3
-    version: 0.16.6
   unplugin-vue-components:
     specifier: ^0.25.1
     version: 0.25.2(vue@3.3.4)
@@ -126,13 +123,6 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.19
-    dev: true
-
-  /@antfu/install-pkg@0.1.1:
-    resolution: {integrity: sha512-LyB/8+bSfa0DFGC06zpCEfs89/XoWZwws5ygEa5D+Xsm3OfI+aXQ86VgVG7Acyef+rSZ5HE7J8rrxzrQeM3PjQ==}
-    dependencies:
-      execa: 5.1.1
-      find-up: 5.0.0
     dev: true
 
   /@antfu/utils@0.7.6:
@@ -660,23 +650,6 @@ packages:
 
   /@humanwhocodes/object-schema@1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
-    dev: true
-
-  /@iconify/types@2.0.0:
-    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
-    dev: true
-
-  /@iconify/utils@2.1.11:
-    resolution: {integrity: sha512-M/w3PkN8zQYXi8N6qK/KhnYMfEbbb6Sk8RZVn8g+Pmmu5ybw177RpsaGwpziyHeUsu4etrexYSWq3rwnIqzYCg==}
-    dependencies:
-      '@antfu/install-pkg': 0.1.1
-      '@antfu/utils': 0.7.6
-      '@iconify/types': 2.0.0
-      debug: 4.3.4
-      kolorist: 1.8.0
-      local-pkg: 0.4.3
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /@jest/schemas@29.6.3:
@@ -2925,10 +2898,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /kolorist@1.8.0:
-    resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
-    dev: true
-
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -4330,37 +4299,6 @@ packages:
       - rollup
     dev: true
 
-  /unplugin-icons@0.16.6:
-    resolution: {integrity: sha512-jL70sAC7twp4hI/MTfm+vyvTRtHqiEIzf3XOjJz7yzhMEEQnk5Ey5YIXRAU03Mc4BF99ITvvnBzfyRZee86OeA==}
-    peerDependencies:
-      '@svgr/core': '>=7.0.0'
-      '@svgx/core': ^1.0.1
-      '@vue/compiler-sfc': ^3.0.2 || ^2.7.0
-      vue-template-compiler: ^2.6.12
-      vue-template-es2015-compiler: ^1.9.0
-    peerDependenciesMeta:
-      '@svgr/core':
-        optional: true
-      '@svgx/core':
-        optional: true
-      '@vue/compiler-sfc':
-        optional: true
-      vue-template-compiler:
-        optional: true
-      vue-template-es2015-compiler:
-        optional: true
-    dependencies:
-      '@antfu/install-pkg': 0.1.1
-      '@antfu/utils': 0.7.6
-      '@iconify/utils': 2.1.11
-      debug: 4.3.4
-      kolorist: 1.8.0
-      local-pkg: 0.4.3
-      unplugin: 1.5.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /unplugin-vue-components@0.25.2(vue@3.3.4):
     resolution: {integrity: sha512-OVmLFqILH6w+eM8fyt/d/eoJT9A6WO51NZLf1vC5c1FZ4rmq2bbGxTy8WP2Jm7xwFdukaIdv819+UI7RClPyCA==}
     engines: {node: '>=14'}
@@ -5129,11 +5067,11 @@ packages:
       nanopop: registry.npmmirror.com/nanopop@2.3.0
     dev: false
 
-  registry.npmmirror.com/ant-design-vue@4.0.7(vue@3.3.4):
-    resolution: {integrity: sha512-oHTtc1GZkfENZTkt2aDvjaD4yoRsowYvCOmxA6+5AGqm5uz/datdJOXsq9nokIhC+vrAMhk6JQVFZ2hh7eU6Pw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ant-design-vue/-/ant-design-vue-4.0.7.tgz}
-    id: registry.npmmirror.com/ant-design-vue/4.0.7
+  registry.npmmirror.com/ant-design-vue@4.0.6(vue@3.3.4):
+    resolution: {integrity: sha512-6kh3b8Ito9SAbOKTW0wyfcCnd859uhQQlttjo8RjMj6YjLK52yNO2TdgYRwed06scUm5RwEnQ2JKMxYYoeG1MA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ant-design-vue/-/ant-design-vue-4.0.6.tgz}
+    id: registry.npmmirror.com/ant-design-vue/4.0.6
     name: ant-design-vue
-    version: 4.0.7
+    version: 4.0.6
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'

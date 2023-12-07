@@ -4,7 +4,7 @@ import imgUrl from '@/assets/imgs/404.png'
 <template>
   <a-result>
     <template #icon>
-      <a-image width="500px" :src="imgUrl" />
+      <a-image width="500px" :preview="false" :src="imgUrl" />
     </template>
   </a-result>
 </template>

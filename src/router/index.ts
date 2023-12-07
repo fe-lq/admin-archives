@@ -20,7 +20,14 @@ const createRoutes = (baseUrl: string) => {
         name: 'customer',
         component: () => import('@/views/customer/Index.vue')
       },
-      { path: '/:pathMatch(.*)*', name: 'notFound', component: PageNotFound }
+      {
+        path: '/error',
+        component: PageNotFound
+      },
+      {
+        path: '/:matchAll(.*)',
+        redirect: 'error'
+      }
     ]
   })
   return router

@@ -15,7 +15,7 @@ interface FormType {
   password: string
   role: number
   email?: string
-  status: boolean
+  status: 0 | 1
 }
 
 const props = defineProps<Props>()
@@ -25,7 +25,7 @@ const form = reactive<FormType>({
   phone: '',
   password: '',
   role: 0,
-  status: true
+  status: 1
 })
 
 const visible = computed({
@@ -45,36 +45,45 @@ const handleConfirm = () => {
 }
 </script>
 <template>
-  <a-drawer v-model="visible" title="添加用户" direction="rtl">
-    <a-form :model="form" label-width="80px" label-position="left" class="form-container">
+  <a-drawer v-model:open="visible" title="添加用户">
+    <a-form :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
       <a-form-item label="用户名">
-        <a-input v-model="form.userName" placeholder="请输入用户名" />
+        <a-input v-model:value="form.userName" placeholder="请输入用户名" />
       </a-form-item>
       <a-form-item label="手机号">
-        <a-input v-model="form.phone" placeholder="请输入手机号" />
+        <a-input v-model:value="form.phone" placeholder="请输入手机号" />
       </a-form-item>
       <a-form-item label="密码">
-        <a-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
+        <a-input
+          v-model:value="form.password"
+          type="password"
+          placeholder="请输入密码"
+          show-password
+        />
       </a-form-item>
       <a-form-item label="邮箱">
-        <a-input v-model="form.email" placeholder="请输入邮箱" />
+        <a-input v-model:value="form.email" placeholder="请输入邮箱" />
       </a-form-item>
       <a-form-item label="角色">
-        <a-select v-model="form.role" placeholder="请选择角色">
-          <a-select-option label="超级管理员" :value="0" />
-          <a-select-option label="管理员" :value="1" />
-          <a-select-option label="角色1" :value="2" />
-        </a-select>
+        <a-select
+          v-model:value="form.role"
+          :options="[
+            { label: '超级管理员', value: 0 },
+            { label: '管理员', value: 1 },
+            { label: '角色1', value: 2 }
+          ]"
+          placeholder="请选择角色"
+        />
       </a-form-item>
       <a-form-item label="状态">
-        <a-select v-model="form.status" placeholder="请选择状态">
-          <a-select-option label="启用" :value="true" />
-          <a-select-option label="禁用" :value="false" />
+        <a-select v-model:value="form.status" placeholder="请选择状态">
+          <a-select-option :value="1">启用</a-select-option>
+          <a-select-option :value="0">禁用</a-select-option>
         </a-select>
       </a-form-item>
     </a-form>
     <template #footer>
-      <div style="flex: auto">
+      <div class="drawer-footer">
         <a-button @click="handleCancel">取消</a-button>
         <a-button type="primary" @click="handleConfirm">确认</a-button>
       </div>
@@ -83,14 +92,9 @@ const handleConfirm = () => {
 </template>
 
 <style scoped lang="scss">
-.form-container {
-  margin-bottom: 10px;
-  // .el-input {
-  //   --el-input-width: 220px;
-  // }
-
-  // .el-select {
-  //   width: 220px;
-  // }
+.drawer-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 </style>

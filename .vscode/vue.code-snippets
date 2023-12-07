@@ -3,7 +3,7 @@
     "scope": "vue",
     "prefix": "vt",
     "body": [
-      "<script setup lang=\"tsx\">",
+      "<script setup lang=\"ts\">",
       "$1",
       "</script>",
       "",
@@ -11,7 +11,7 @@
       "\t<div></div>",
       "</template>",
       "",
-      "<style module lane=\"scss\">",
+      "<style scoped lang=\"scss\">",
       "",
       "</style>"
     ],

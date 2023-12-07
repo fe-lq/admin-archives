@@ -77,47 +77,59 @@ const handleDelete = (row: any) => {
 </script>
 
 <template>
-  <a-form :inline="true" :model="searchForm" class="form-container">
-    <a-form-item label="用户名">
-      <a-input v-model="searchForm.userName" placeholder="请输入用户名" clearable />
-    </a-form-item>
-    <a-form-item label="角色">
-      <a-input v-model="searchForm.role" placeholder="请输入角色名称" clearable />
-    </a-form-item>
-    <a-form-item>
-      <a-button type="primary" @click="onSubmit">查询</a-button>
-      <a-button @click="onSubmit">重置</a-button>
-    </a-form-item>
-    <a-form-item>
-      <a-button type="primary" @click="drawerVisible = true">新增</a-button>
-    </a-form-item>
-  </a-form>
-  <a-table :columns="columns" :data-source="tableData">
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.dataIndex === 'users'">
-        <a-space wrap>
-          <a-tag v-for="user in record.users" :key="user">{{ user }}</a-tag>
+  <ContentCard>
+    <a-form layout="inline" :model="searchForm" class="form-container">
+      <a-form-item label="用户名">
+        <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" clearable />
+      </a-form-item>
+      <a-form-item label="角色">
+        <a-input v-model:value="searchForm.role" placeholder="请输入角色名称" clearable />
+      </a-form-item>
+      <a-form-item>
+        <a-space>
+          <a-button type="primary" @click="onSubmit">查询</a-button>
+          <a-button @click="onSubmit">重置</a-button>
         </a-space>
+      </a-form-item>
+      <a-form-item class="add-item">
+        <a-button type="primary" @click="drawerVisible = true">新增</a-button>
+      </a-form-item>
+    </a-form>
+    <a-table :columns="columns" :data-source="tableData">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'users'">
+          <a-space :size="0" wrap>
+            <a-tag v-for="user in record.users" :key="user">{{ user }}</a-tag>
+          </a-space>
+        </template>
+        <template v-if="column.dataIndex === 'permissions'">
+          {{ record.permissions.join(', ') }}</template
+        >
+        <template v-if="column.dataIndex === 'operate'">
+          <a-space wrap>
+            <a-button type="primary" size="small" @click="handleClick(record)">编辑</a-button>
+            <a-button type="primary" danger size="small" @click="handleDelete(record)">
+              删除
+            </a-button>
+          </a-space>
+        </template>
       </template>
-      <template v-if="column.dataIndex === 'permissions'">
-        {{ record.permissions.join(', ') }}</template
-      >
-      <template v-if="column.dataIndex === 'operate'">
-        <a-button type="primary" size="small" @click="handleClick(record)">编辑</a-button>
-        <a-button type="primary" danger size="small" @click="handleDelete(record)"
-          >删除</a-button
-        ></template
-      >
-    </template>
-  </a-table>
+    </a-table>
+  </ContentCard>
 
   <SliderBrawer :visible="drawerVisible" @close="drawerVisible = false" />
 </template>
 
 <style lang="scss" scoped>
 .form-container {
-  // .el-input {
-  //   --el-input-width: 220px;
-  // }
+  margin-bottom: 20px;
+  .ant-input,
+  .ant-select {
+    width: 200px;
+  }
+  .add-item {
+    margin-left: auto;
+    margin-right: 0;
+  }
 }
 </style>
