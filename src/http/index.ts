@@ -9,6 +9,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   (config) => {
+    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
     return config
   },
   (error) => {
@@ -18,30 +19,45 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   (resolve) => {
+    // 只要拥有有新token就重新设置
+    if (resolve.headers['refresh-token']) {
+      localStorage.setItem('token', resolve.headers['refresh-token'])
+    }
     // 如要使用响应的code，就把code放在data中
-    return resolve.data.data
+    return resolve.data
   },
   (error) => {
-    return Promise.reject(error)
+    return Promise.reject(error.response?.data)
   }
 )
 
 const createRequest = (type: MethodKey) => {
-  return <R, P>(url: string, params: R, config: AxiosRequestConfig) => {
-    return http.request({
-      method: type,
-      url,
-      params: type === 'get' ? params : undefined,
-      data: type !== 'get' ? params : undefined,
-      ...config
-    }) as Promise<P>
+  /**
+   *  泛型
+   *  <响应, 请求>
+   */
+  return <R = unknown, P = unknown>(url: string) => {
+    const paramKey = type === 'get' ? 'params' : 'data'
+    return async (params: P, config?: AxiosRequestConfig) => {
+      return http.request<
+        R,
+        {
+          code: number
+          data: R
+          message: string
+        }
+      >({
+        method: type,
+        url,
+        [paramKey]: params,
+        ...config
+      })
+    }
   }
 }
 
-export default {
-  postRequest: createRequest('post'),
-  getRequest: createRequest('get'),
-  deleteRequest: createRequest('delete'),
-  putRequest: createRequest('put'),
-  patchRequest: createRequest('patch')
-}
+export const postRequest = createRequest('post')
+export const getRequest = createRequest('get')
+export const deleteRequest = createRequest('delete')
+export const putRequest = createRequest('put')
+export const patchRequest = createRequest('patch')

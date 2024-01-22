@@ -17,6 +17,7 @@ module.exports = {
     'prefer-const': 'error',
     'vue/multi-word-component-names': 'off',
     'no-unused-vars': 'off',
+    'vue/attribute-hyphenation': 'off',
     '@typescript-eslint/no-unused-vars': 'error'
   }
 }

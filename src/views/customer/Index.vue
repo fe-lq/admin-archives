@@ -74,16 +74,16 @@ const columns = [
   <ContentCard>
     <a-form layout="inline" :model="searchForm" class="form-container">
       <a-form-item label="用户名">
-        <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" clearable />
+        <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" allowClear />
       </a-form-item>
       <a-form-item label="注册日期">
         <a-range-picker v-model:value="searchForm.registerDate" />
       </a-form-item>
       <a-form-item label="微信号">
-        <a-input v-model:value="searchForm.wxCode" placeholder="请输入微信号" clearable />
+        <a-input v-model:value="searchForm.wxCode" placeholder="请输入微信号" allowClear />
       </a-form-item>
       <a-form-item label="手机号">
-        <a-input v-model:value="searchForm.phone" placeholder="请输入手机号" clearable />
+        <a-input v-model:value="searchForm.phone" placeholder="请输入手机号" allowClear />
       </a-form-item>
       <a-form-item>
         <a-space>
@@ -93,7 +93,7 @@ const columns = [
       </a-form-item>
     </a-form>
     <a-table :columns="columns" :data-source="tableData">
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ column, record }: any">
         <template v-if="column.dataIndex === 'phone'">
           {{ getMaskPhone(record.phone) }}
         </template>

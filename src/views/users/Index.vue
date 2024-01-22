@@ -1,63 +1,49 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import SliderBrawer from './components/SliderDrawer.vue'
-import { Modal, message } from 'ant-design-vue'
+import dayJs from 'dayjs'
+import SliderDrawer from './components/SliderDrawer.vue'
+import { FormInstance, Modal, message } from 'ant-design-vue'
+import { deleteUser, getUserList, readUser } from '@/api/user'
+import { DrawerEnum, Role, User } from '@/types/user'
+import { getMaskPhone } from '@/utils/index'
 
 interface FormType {
-  userName: string
-  phone: string
+  userName?: string
+  phone?: string
   email?: string
   status?: 0 | 1
 }
 const drawerVisible = ref(false)
-const searchForm = reactive<FormType>({
-  userName: '',
-  phone: ''
-})
+const drawerType = ref<DrawerEnum>(DrawerEnum.ADD)
+const formRef = ref<FormInstance>()
+const tableData = ref<User[]>([])
+const editFormValues = ref<User>()
+const searchForm = reactive<FormType>({})
 
-const getPhone = (value: string) => value.replace(/(?<=\d{3})(?<!\d{4})\d{4}/g, '****')
-
-const tableData = [
-  {
-    date: '2016-05-03',
-    userName: 'Tom',
-    role: '超级管理员',
-    status: 1,
-    phone: '17621733753'
-  },
-  {
-    date: '2016-05-02',
-    userName: 'Tom',
-    role: '管理员',
-    status: 0,
-    phone: '17665433753'
-  },
-  {
-    date: '2016-05-04',
-    userName: 'Tom',
-    role: '管理员',
-    status: 1,
-    phone: '17611113753'
-  },
-  {
-    date: '2016-05-01',
-    userName: 'Tom',
-    role: '管理员',
-    status: 1,
-    phone: '17622213753'
+const fetchUsers = async () => {
+  try {
+    const { data } = await getUserList({
+      ...searchForm,
+      status: typeof searchForm.status === 'number' ? !!searchForm.status : undefined
+    })
+    tableData.value = data
+  } catch (error: any) {
+    message.error(error.message)
   }
-]
+}
 
-const onSubmit = () => {
-  console.log(searchForm)
-  console.log('submit!')
+onMounted(fetchUsers)
+
+const handleSearch = () => {
+  fetchUsers()
+}
+
+const handleReset = () => {
+  formRef.value?.resetFields()
+  fetchUsers()
 }
 
 const columns = [
-  {
-    title: '创建时间',
-    dataIndex: 'date'
-  },
   {
     title: '用户名',
     dataIndex: 'userName'
@@ -75,22 +61,41 @@ const columns = [
     dataIndex: 'phone'
   },
   {
+    title: '创建时间',
+    dataIndex: 'createDate'
+  },
+  {
     title: '操作',
     dataIndex: 'operate'
   }
 ]
 
-const handleClick = () => {}
+const handleEdit = async (userId: number) => {
+  try {
+    const { data } = await readUser({ userId })
+    editFormValues.value = data
+    drawerVisible.value = true
+    drawerType.value = DrawerEnum.EDIT
+  } catch (error: any) {
+    message.error(error.message)
+  }
+}
 
-const handleDelete = () => {
+const handleDelete = (userId: number) => {
   Modal.confirm({
     title: '提示',
     content: '确认是否要删除当前数据？',
     onCancel: () => {
       message.warning('操作已取消')
     },
-    onOk: () => {
-      message.success('操作成功')
+    onOk: async () => {
+      try {
+        await deleteUser({ userId })
+        fetchUsers()
+        message.success('操作成功')
+      } catch (error: any) {
+        message.error(error.message)
+      }
     }
   })
 }
@@ -98,23 +103,23 @@ const handleDelete = () => {
 
 <template>
   <ContentCard>
-    <a-form layout="inline" :model="searchForm" class="form-container">
-      <a-form-item label="用户名">
-        <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" clearable />
+    <a-form key="1" ref="formRef" layout="inline" :model="searchForm" class="form-container">
+      <a-form-item label="用户名" name="userName">
+        <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
       </a-form-item>
-      <a-form-item label="手机号">
-        <a-input v-model:value="searchForm.phone" placeholder="请输入手机号" clearable />
+      <a-form-item label="手机号" name="phone">
+        <a-input v-model:value="searchForm.phone" placeholder="请输入手机号" />
       </a-form-item>
-      <a-form-item label="状态">
-        <a-select v-model:value="searchForm.status" placeholder="请选择状态" clearable>
+      <a-form-item label="状态" name="status">
+        <a-select v-model:value="searchForm.status" placeholder="请选择状态" allowClear>
           <a-select-option :value="1">启用</a-select-option>
           <a-select-option :value="0">禁用</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item>
         <a-space>
-          <a-button type="primary" @click="onSubmit">查询</a-button>
-          <a-button @click="onSubmit">重置</a-button>
+          <a-button type="primary" @click="handleSearch">查询</a-button>
+          <a-button @click="handleReset">重置</a-button>
         </a-space>
       </a-form-item>
       <a-form-item class="add-item">
@@ -122,24 +127,40 @@ const handleDelete = () => {
       </a-form-item>
     </a-form>
     <a-table :columns="columns" :data-source="tableData">
-      <template #bodyCell="{ column, record }">
+      <!-- 组件问题先any一下，等更新呢 -->
+      <template #bodyCell="{ text, column, record }: any">
+        <template v-if="column.dataIndex === 'createDate'">
+          {{ dayJs(text).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+        <template v-if="column.dataIndex === 'role'">
+          {{ text === Role.ADMIN ? '超级管理员' : '管理员' }}
+        </template>
         <template v-if="column.dataIndex === 'status'">
-          <a-tag v-if="record.status" color="success">启用</a-tag>
+          <a-tag v-if="text" color="success">启用</a-tag>
           <a-tag v-else color="error">禁用</a-tag>
         </template>
         <template v-if="column.dataIndex === 'phone'">
-          {{ getPhone(record.phone) }}
+          {{ getMaskPhone(text) }}
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <a-button type="primary" size="small" @click="handleClick">编辑</a-button>
-            <a-button type="primary" danger size="small" @click="handleDelete">删除</a-button>
+            <a-button type="primary" size="small" @click="() => handleEdit(record.userId)"
+              >编辑</a-button
+            >
+            <a-button type="primary" danger size="small" @click="() => handleDelete(record.userId)"
+              >删除</a-button
+            >
           </a-space>
         </template>
       </template>
     </a-table>
   </ContentCard>
-  <SliderBrawer v-model:visible="drawerVisible" />
+  <SliderDrawer
+    v-model:visible="drawerVisible"
+    :type="drawerType"
+    :form-data="editFormValues"
+    @onConfirm="fetchUsers"
+  />
 </template>
 
 <style lang="scss" scoped>
