@@ -1,5 +1,4 @@
 import { h, createApp } from 'vue'
-// import { createPinia } from 'pinia'
 import { vueBridge } from '@garfish/bridge-vue-v3'
 
 import App from './App.vue'
@@ -14,10 +13,9 @@ export const provider = vueBridge({
       render: () => h(App)
     }
   },
-  handleInstance: (vueInstance, { basename, appName, props, appRenderInfo }) => {
-    console.log(basename, appName, props, appRenderInfo)
+  handleInstance: (vueInstance, { basename, appName }) => {
+    console.log(basename, appName)
     vueInstance.use(createRoutes(basename))
-    // vueInstance.provide(stateSymbol, createState());
   }
 })
 

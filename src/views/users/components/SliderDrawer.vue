@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { getPermList } from '@/api/permission'
 import { createUser, updateUser } from '@/api/user'
 import { DrawerEnum } from '@/types/common'
-import { Role, User } from '@/types/user'
+import { User } from '@/types/user'
 import { genEncryptPsw } from '@/utils'
 import { message } from 'ant-design-vue'
 import { FormInstance, Rule } from 'ant-design-vue/es/form'
@@ -19,14 +20,25 @@ type Emits = {
 }
 
 const defaultForm: Partial<User> = {
-  role: Role.USER,
+  // 1 是超级管理员，服务端数据定义的
+  permissionId: 1,
   status: true
 }
 
 const formAddRef = ref<FormInstance>()
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const roleList = reactive<{ label: string; value: number }[]>([])
 const formValues = ref<Partial<User>>(defaultForm)
+
+onMounted(async () => {
+  const { data } = await getPermList()
+  const options = data.map((item) => ({
+    label: item.roleName,
+    value: item.id
+  }))
+  roleList.push(...options)
+})
 onUpdated(() => {
   if (props.type === DrawerEnum.EDIT) {
     formValues.value = props.formData!
@@ -102,13 +114,10 @@ const rules: Record<string, Rule[]> = {
       <a-form-item label="邮箱" name="email">
         <a-input v-model:value="formValues.email" placeholder="请输入邮箱" />
       </a-form-item>
-      <a-form-item label="角色" name="role">
+      <a-form-item label="角色" name="permissionId">
         <a-select
-          v-model:value="formValues.role"
-          :options="[
-            { label: '超级管理员', value: Role.ADMIN },
-            { label: '管理员', value: Role.USER }
-          ]"
+          v-model:value="formValues.permissionId"
+          :options="roleList"
           placeholder="请选择角色"
         />
       </a-form-item>

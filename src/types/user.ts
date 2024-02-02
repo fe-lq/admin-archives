@@ -4,12 +4,8 @@ export interface User {
   password: string
   phone: string
   status: boolean
-  role: Role
+  role: string
+  permissionId: number
   email?: string
   createData?: string
-}
-
-export enum Role {
-  ADMIN = 'ADMIN',
-  USER = 'USER'
 }

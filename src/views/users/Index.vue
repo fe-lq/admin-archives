@@ -5,7 +5,7 @@ import SliderDrawer from './components/SliderDrawer.vue'
 import { FormInstance, Modal, message } from 'ant-design-vue'
 import { deleteUser, getUserList, readUser } from '@/api/user'
 import { DrawerEnum } from '@/types/common'
-import { Role, User } from '@/types/user'
+import { User } from '@/types/user'
 import { getDecryptPsw, getMaskPhone } from '@/utils/index'
 
 interface FormType {
@@ -19,10 +19,12 @@ const drawerType = ref<DrawerEnum>(DrawerEnum.ADD)
 const formRef = ref<FormInstance>()
 const tableData = ref<User[]>([])
 const editFormValues = ref<User>()
+const loading = ref<boolean>()
 const searchForm = reactive<FormType>({})
 
 const fetchUsers = async () => {
   try {
+    loading.value = true
     const { data } = await getUserList({
       ...searchForm,
       status: typeof searchForm.status === 'number' ? !!searchForm.status : undefined
@@ -30,6 +32,8 @@ const fetchUsers = async () => {
     tableData.value = data
   } catch (error: any) {
     message.error(error.message)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -107,59 +111,62 @@ const handleDelete = (userId: number) => {
 </script>
 
 <template>
-  <ContentCard>
-    <a-form key="1" ref="formRef" layout="inline" :model="searchForm" class="form-container">
-      <a-form-item label="用户名" name="userName">
-        <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
-      </a-form-item>
-      <a-form-item label="手机号" name="phone">
-        <a-input v-model:value="searchForm.phone" placeholder="请输入手机号" />
-      </a-form-item>
-      <a-form-item label="状态" name="status">
-        <a-select v-model:value="searchForm.status" placeholder="请选择状态" allowClear>
-          <a-select-option :value="1">启用</a-select-option>
-          <a-select-option :value="0">禁用</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item>
-        <a-space>
-          <a-button type="primary" @click="handleSearch">查询</a-button>
-          <a-button @click="handleReset">重置</a-button>
-        </a-space>
-      </a-form-item>
-      <a-form-item class="add-item">
-        <a-button type="primary" @click="() => handleOpenDrawer()">新增</a-button>
-      </a-form-item>
-    </a-form>
-    <a-table :columns="columns" :data-source="tableData">
-      <!-- 组件问题先any一下，等更新呢 -->
-      <template #bodyCell="{ text, column, record }: any">
-        <template v-if="column.dataIndex === 'createDate'">
-          {{ dayJs(text).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-        <template v-if="column.dataIndex === 'role'">
-          {{ text === Role.ADMIN ? '超级管理员' : '管理员' }}
-        </template>
-        <template v-if="column.dataIndex === 'status'">
-          <a-tag v-if="text" color="success">启用</a-tag>
-          <a-tag v-else color="error">禁用</a-tag>
-        </template>
-        <template v-if="column.dataIndex === 'phone'">
-          {{ getMaskPhone(text) }}
-        </template>
-        <template v-if="column.dataIndex === 'operate'">
+  <a-spin :spinning="loading">
+    <ContentCard>
+      <a-form key="1" ref="formRef" layout="inline" :model="searchForm" class="form-container">
+        <a-form-item label="用户名" name="userName">
+          <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
+        </a-form-item>
+        <a-form-item label="手机号" name="phone">
+          <a-input v-model:value="searchForm.phone" placeholder="请输入手机号" />
+        </a-form-item>
+        <a-form-item label="状态" name="status">
+          <a-select v-model:value="searchForm.status" placeholder="请选择状态" allowClear>
+            <a-select-option :value="1">启用</a-select-option>
+            <a-select-option :value="0">禁用</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item>
           <a-space>
-            <a-button type="primary" size="small" @click="() => handleOpenDrawer(record.userId)"
-              >编辑</a-button
-            >
-            <a-button type="primary" danger size="small" @click="() => handleDelete(record.userId)"
-              >删除</a-button
-            >
+            <a-button type="primary" @click="handleSearch">查询</a-button>
+            <a-button @click="handleReset">重置</a-button>
           </a-space>
+        </a-form-item>
+        <a-form-item class="add-item">
+          <a-button type="primary" @click="() => handleOpenDrawer()">新增</a-button>
+        </a-form-item>
+      </a-form>
+      <a-table :columns="columns" :data-source="tableData">
+        <!-- 组件问题先any一下，等更新呢 -->
+        <template #bodyCell="{ text, column, record }: any">
+          <template v-if="column.dataIndex === 'createDate'">
+            {{ dayJs(text).format('YYYY-MM-DD HH:mm:ss') }}
+          </template>
+          <template v-if="column.dataIndex === 'status'">
+            <a-tag v-if="text" color="success">启用</a-tag>
+            <a-tag v-else color="error">禁用</a-tag>
+          </template>
+          <template v-if="column.dataIndex === 'phone'">
+            {{ getMaskPhone(text) }}
+          </template>
+          <template v-if="column.dataIndex === 'operate'">
+            <a-space>
+              <a-button type="primary" size="small" @click="() => handleOpenDrawer(record.userId)"
+                >编辑</a-button
+              >
+              <a-button
+                type="primary"
+                danger
+                size="small"
+                @click="() => handleDelete(record.userId)"
+                >删除</a-button
+              >
+            </a-space>
+          </template>
         </template>
-      </template>
-    </a-table>
-  </ContentCard>
+      </a-table>
+    </ContentCard>
+  </a-spin>
   <SliderDrawer
     v-model:visible="drawerVisible"
     :type="drawerType"

@@ -37,7 +37,6 @@ const handleCancel = () => {
 
 const handleConfirm = async () => {
   await formAddRef.value?.validate()
-  console.log(form.value)
   emit('onConfirm', form.value)
   formAddRef.value?.resetFields()
 }

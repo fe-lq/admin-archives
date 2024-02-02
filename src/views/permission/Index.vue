@@ -156,7 +156,13 @@ const getPermItems = (permissionScopeList: Permission['permissionScope']) => {
         <template v-if="column.dataIndex === 'operate'">
           <a-space wrap>
             <a-button type="primary" size="small" @click="handleOpenDrawer(record)">编辑</a-button>
-            <a-button type="primary" danger size="small" @click="handleDelete(record)">
+            <a-button
+              type="primary"
+              danger
+              size="small"
+              :disabled="record.id === 1"
+              @click="handleDelete(record)"
+            >
               删除
             </a-button>
           </a-space>
