@@ -23,7 +23,6 @@ http.interceptors.response.use(
     if (resolve.headers['refresh-token']) {
       localStorage.setItem('token', resolve.headers['refresh-token'])
     }
-    // 如要使用响应的code，就把code放在data中
     return resolve.data
   },
   (error) => {
@@ -38,7 +37,7 @@ const createRequest = (type: MethodKey) => {
    */
   return <R = unknown, P = unknown>(url: string) => {
     const paramKey = type === 'get' ? 'params' : 'data'
-    return async (params: P, config?: AxiosRequestConfig) => {
+    return async (params?: P, config?: AxiosRequestConfig) => {
       return http.request<
         R,
         {

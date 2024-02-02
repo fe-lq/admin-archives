@@ -13,8 +13,3 @@ export enum Role {
   ADMIN = 'ADMIN',
   USER = 'USER'
 }
-
-export enum DrawerEnum {
-  ADD = 'add',
-  EDIT = 'edit'
-}

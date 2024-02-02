@@ -2,3 +2,8 @@
 export type RequiredPick<T, K extends keyof T> = {
   [P in K]-?: T[P]
 }
+
+export enum DrawerEnum {
+  ADD = 'add',
+  EDIT = 'edit'
+}

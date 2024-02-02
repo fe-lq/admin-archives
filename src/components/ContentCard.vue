@@ -1,8 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps<{
+  loading?: boolean
+}>()
+</script>
 
 <template>
   <div class="content-card">
-    <slot></slot>
+    <a-spin :spinning="props.loading">
+      <slot></slot>
+    </a-spin>
   </div>
 </template>
 

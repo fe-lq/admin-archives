@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { createUser, updateUser } from '@/api/user'
-import { DrawerEnum, Role, User } from '@/types/user'
+import { DrawerEnum } from '@/types/common'
+import { Role, User } from '@/types/user'
+import { genEncryptPsw } from '@/utils'
 import { message } from 'ant-design-vue'
 import { FormInstance, Rule } from 'ant-design-vue/es/form'
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 
 interface Props {
   type: DrawerEnum
@@ -16,15 +18,21 @@ type Emits = {
   onConfirm: []
 }
 
+const defaultForm: Partial<User> = {
+  role: Role.USER,
+  status: true
+}
+
 const formAddRef = ref<FormInstance>()
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
-const formValues = reactive<Partial<User>>({
-  role: Role.USER,
-  status: true
-})
+const formValues = ref<Partial<User>>(defaultForm)
 onUpdated(() => {
-  Object.assign(formValues, props.formData)
+  if (props.type === DrawerEnum.EDIT) {
+    formValues.value = props.formData!
+  } else {
+    formValues.value = defaultForm
+  }
 })
 
 const title = computed(() => (props.type === DrawerEnum.ADD ? '添加用户' : '编辑用户'))
@@ -45,14 +53,18 @@ const handleCancel = () => {
 
 const handleConfirm = async () => {
   await formAddRef.value?.validate()
+  const params = {
+    ...formValues.value,
+    password: genEncryptPsw(formValues.value.password as string)
+  } as User
   try {
     if (props.type === DrawerEnum.EDIT) {
-      await updateUser(formValues as User)
+      await updateUser(params)
     } else {
-      await createUser(formValues)
+      await createUser(params)
     }
     emit('onConfirm')
-    visible.value = false
+    handleCancel()
     message.success('操作成功')
   } catch (error) {
     message.error('操作失败')

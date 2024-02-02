@@ -4,8 +4,9 @@ import dayJs from 'dayjs'
 import SliderDrawer from './components/SliderDrawer.vue'
 import { FormInstance, Modal, message } from 'ant-design-vue'
 import { deleteUser, getUserList, readUser } from '@/api/user'
-import { DrawerEnum, Role, User } from '@/types/user'
-import { getMaskPhone } from '@/utils/index'
+import { DrawerEnum } from '@/types/common'
+import { Role, User } from '@/types/user'
+import { getDecryptPsw, getMaskPhone } from '@/utils/index'
 
 interface FormType {
   userName?: string
@@ -70,15 +71,19 @@ const columns = [
   }
 ]
 
-const handleEdit = async (userId: number) => {
-  try {
-    const { data } = await readUser({ userId })
-    editFormValues.value = data
-    drawerVisible.value = true
-    drawerType.value = DrawerEnum.EDIT
-  } catch (error: any) {
-    message.error(error.message)
+const handleOpenDrawer = async (userId?: number) => {
+  if (userId) {
+    try {
+      const { data } = await readUser({ userId })
+      editFormValues.value = { ...data, password: getDecryptPsw(data.password) }
+      drawerType.value = DrawerEnum.EDIT
+    } catch (error: any) {
+      message.error(error.message)
+    }
+  } else {
+    drawerType.value = DrawerEnum.ADD
   }
+  drawerVisible.value = true
 }
 
 const handleDelete = (userId: number) => {
@@ -123,7 +128,7 @@ const handleDelete = (userId: number) => {
         </a-space>
       </a-form-item>
       <a-form-item class="add-item">
-        <a-button type="primary" @click="drawerVisible = true">新增</a-button>
+        <a-button type="primary" @click="() => handleOpenDrawer()">新增</a-button>
       </a-form-item>
     </a-form>
     <a-table :columns="columns" :data-source="tableData">
@@ -144,7 +149,7 @@ const handleDelete = (userId: number) => {
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space>
-            <a-button type="primary" size="small" @click="() => handleEdit(record.userId)"
+            <a-button type="primary" size="small" @click="() => handleOpenDrawer(record.userId)"
               >编辑</a-button
             >
             <a-button type="primary" danger size="small" @click="() => handleDelete(record.userId)"

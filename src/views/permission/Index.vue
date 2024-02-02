@@ -1,50 +1,52 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import SliderBrawer from './components/SliderDrawer.vue'
-import { Modal, message } from 'ant-design-vue'
+import { FormInstance, Modal, message } from 'ant-design-vue'
+import { PermFormType, Permission } from '@/types/permission'
+import { createPerm, deletePerm, getPermList, updatePerm } from '@/api/permission'
+import { DrawerEnum } from '@/types/common'
 
 interface FormType {
-  userName: string
-  phone: string
-  email?: string
-  role?: string
+  userName?: string
+  roleName?: string
 }
 const drawerVisible = ref(false)
-const searchForm = reactive<FormType>({
-  userName: '',
-  phone: ''
-})
+const loading = ref(false)
+const brawerTitle = ref('新增权限')
+const editItemValues = ref<PermFormType & { id?: number }>()
+const drawerType = ref<DrawerEnum>(DrawerEnum.ADD)
+const formRef = ref<FormInstance>()
+const tableData = ref<Permission[]>([])
+const searchForm = reactive<FormType>({})
 
-const tableData = [
-  {
-    users: ['Tom', '李四', '张总', '高总'],
-    role: '超级管理员',
-    permissions: ['线上档案', '商品信息']
-  },
-  {
-    users: ['Sire', '李四', '张总', '高总'],
-    role: '管理员',
-    permissions: ['客户管理', '商品信息']
-  },
-  {
-    users: ['Sire', '李四', '高总'],
-    role: '管理员',
-    permissions: ['客户管理', '线上商品']
+const fetchPermissions = async () => {
+  try {
+    loading.value = true
+    const res = await getPermList(searchForm)
+    tableData.value = res.data
+  } catch (error: any) {
+    message.error(error.message)
+  } finally {
+    loading.value = false
   }
-]
+}
+
+onMounted(() => {
+  fetchPermissions()
+})
 
 const columns = [
   {
     title: '角色名称',
-    dataIndex: 'role'
+    dataIndex: 'roleName'
   },
   {
     title: '成员',
-    dataIndex: 'users'
+    dataIndex: 'members'
   },
   {
     title: '权限范围',
-    dataIndex: 'permissions'
+    dataIndex: 'permissionScope'
   },
   {
     title: '操作',
@@ -52,62 +54,108 @@ const columns = [
   }
 ]
 
-const onSubmit = () => {
-  console.log(searchForm)
-  console.log('submit!')
+const handleSearch = () => {
+  fetchPermissions()
 }
 
-const handleClick = (row: any) => {
-  console.log(row)
+const handleReset = () => {
+  formRef.value?.resetFields()
+  fetchPermissions()
 }
 
-const handleDelete = (row: any) => {
+const handleDelete = (row: Permission) => {
   Modal.confirm({
     title: '提示',
     content: '确认是否要删除当前数据？',
     onCancel: () => {
       message.warning('操作已取消')
     },
-    onOk: () => {
-      console.log(row)
-      message.success('操作成功')
+    onOk: async () => {
+      try {
+        await deletePerm({ id: row.id })
+        fetchPermissions()
+        message.success('操作成功')
+      } catch (error: any) {
+        message.error(error.message)
+      }
     }
   })
+}
+
+const handleConfirm = async (values: PermFormType) => {
+  try {
+    if (drawerType.value === DrawerEnum.EDIT) {
+      await updatePerm({ ...values, id: editItemValues.value?.id! })
+    } else {
+      await createPerm(values)
+    }
+    fetchPermissions()
+    drawerVisible.value = false
+    message.success('操作成功')
+  } catch (error) {
+    message.error('操作失败')
+  }
+}
+
+const handleOpenDrawer = (row?: Permission) => {
+  if (row) {
+    editItemValues.value = {
+      ...row,
+      members: row.members?.map((item) => item.userId) ?? [],
+      permissionScope: row.permissionScope?.map((item) => item.id) ?? []
+    }
+    drawerType.value = DrawerEnum.EDIT
+    brawerTitle.value = '编辑权限'
+  } else {
+    editItemValues.value = undefined
+    drawerType.value = DrawerEnum.ADD
+    brawerTitle.value = '新增权限'
+  }
+  drawerVisible.value = true
+}
+
+const getPermItems = (permissionScopeList: Permission['permissionScope']) => {
+  if (!permissionScopeList?.length) {
+    return '所有权限'
+  }
+  return permissionScopeList.map((item) => item.menuName).join(', ')
 }
 </script>
 
 <template>
-  <ContentCard>
-    <a-form layout="inline" :model="searchForm" class="form-container">
+  <ContentCard :loading="loading">
+    <a-form ref="formRef" layout="inline" :model="searchForm" class="form-container">
+      <a-form-item label="角色">
+        <a-input v-model:value="searchForm.roleName" placeholder="请输入角色名称" allowClear />
+      </a-form-item>
       <a-form-item label="用户名">
         <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" allowClear />
       </a-form-item>
-      <a-form-item label="角色">
-        <a-input v-model:value="searchForm.role" placeholder="请输入角色名称" allowClear />
-      </a-form-item>
       <a-form-item>
         <a-space>
-          <a-button type="primary" @click="onSubmit">查询</a-button>
-          <a-button @click="onSubmit">重置</a-button>
+          <a-button type="primary" @click="handleSearch">查询</a-button>
+          <a-button @click="handleReset">重置</a-button>
         </a-space>
       </a-form-item>
       <a-form-item class="add-item">
-        <a-button type="primary" @click="drawerVisible = true">新增</a-button>
+        <a-button type="primary" @click="handleOpenDrawer()">新增</a-button>
       </a-form-item>
     </a-form>
     <a-table :columns="columns" :data-source="tableData">
       <template #bodyCell="{ column, record }: any">
-        <template v-if="column.dataIndex === 'users'">
+        <template v-if="column.dataIndex === 'members'">
           <a-space :size="0" wrap>
-            <a-tag v-for="user in record.users" :key="user">{{ user }}</a-tag>
+            <a-tag v-for="user in record.members" :key="user" color="blue">{{
+              user.userName
+            }}</a-tag>
           </a-space>
         </template>
-        <template v-if="column.dataIndex === 'permissions'">
-          {{ record.permissions.join(', ') }}</template
-        >
+        <template v-if="column.dataIndex === 'permissionScope'">
+          {{ getPermItems(record.permissionScope) }}
+        </template>
         <template v-if="column.dataIndex === 'operate'">
           <a-space wrap>
-            <a-button type="primary" size="small" @click="handleClick(record)">编辑</a-button>
+            <a-button type="primary" size="small" @click="handleOpenDrawer(record)">编辑</a-button>
             <a-button type="primary" danger size="small" @click="handleDelete(record)">
               删除
             </a-button>
@@ -117,7 +165,13 @@ const handleDelete = (row: any) => {
     </a-table>
   </ContentCard>
 
-  <SliderBrawer :visible="drawerVisible" @close="drawerVisible = false" />
+  <SliderBrawer
+    :title="brawerTitle"
+    :visible="drawerVisible"
+    :formValue="editItemValues"
+    @close="drawerVisible = false"
+    @onConfirm="handleConfirm"
+  />
 </template>
 
 <style lang="scss" scoped>
