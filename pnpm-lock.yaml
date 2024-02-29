@@ -4,7 +4,6 @@ specifiers:
   '@ant-design/icons-vue': ^7.0.1
   '@commitlint/cli': ^17.6.6
   '@commitlint/config-conventional': ^17.6.6
-  '@garfish/bridge-vue-v3': ^1.17.1
   '@rushstack/eslint-patch': ^1.2.0
   '@tsconfig/node18': ^2.0.1
   '@types/crypto-js': ^4.2.2
@@ -42,7 +41,6 @@ specifiers:
 
 dependencies:
   '@ant-design/icons-vue': 7.0.1_vue@3.3.4
-  '@garfish/bridge-vue-v3': 1.17.1_vue@3.3.4
   ant-design-vue: 4.1.0_vue@3.3.4
   axios: 1.5.1
   crypto-js: 4.2.0
@@ -892,14 +890,6 @@ packages:
     resolution: {integrity: sha512-HxjQ8Qn+4SI3/AFv6sOrDB+g6PpUTDwSJiQqOrnneEk8L71161srI9gjzzZvYVbzHiVg/BvcH95+cK/zfIt4pg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
-
-  /@garfish/bridge-vue-v3/1.17.1_vue@3.3.4:
-    resolution: {integrity: sha512-fStk7EGR9belY3hLyqwK39cSWKl4f3bYRDwCO6TPlJlFrS1Mh8nnuVPaPNIbl36YK/KGccQ+EaZHTeAIzKtBEg==}
-    peerDependencies:
-      vue: '=3'
-    dependencies:
-      vue: 3.3.4
-    dev: false
 
   /@humanwhocodes/config-array/0.11.11:
     resolution: {integrity: sha512-N2brEuAadi0CcdeMXUkhbZB84eskAc8MEX1By6qEchoVywSgXPIjou4rYsl0V3Hj0ZnuGycGCjdNgockbzeWNA==}
