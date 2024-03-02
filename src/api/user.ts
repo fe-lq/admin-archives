@@ -1,5 +1,6 @@
-import { getRequest, postRequest } from '@/http'
+import { getRequest, postRequest, http } from '@fe-lq/micro-kit'
 import { User } from '@/types/user'
+http.defaults.baseURL = import.meta.env.VITE_APP_BASE
 
 export const getUserList = postRequest<User[]>('/users/list')
 export const createUser = postRequest<unknown, Partial<User>>('/users/add')
