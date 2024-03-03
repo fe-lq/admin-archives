@@ -15,9 +15,8 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
-    "@fe-lq/micro-kit": "1.0.0-0.4",
+    "@fe-lq/micro-kit": "1.0.1-7",
     "ant-design-vue": "^4.1.0",
-    "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
     "lodash-es": "^4.17.21",
