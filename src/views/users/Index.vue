@@ -150,14 +150,20 @@ const handleDelete = (userId: number) => {
             {{ getMaskPhone(text) }}
           </template>
           <template v-if="column.dataIndex === 'operate'">
+            <!-- 测试账号员暂且写死控制不能修改 -->
             <a-space>
-              <a-button type="primary" size="small" @click="() => handleOpenDrawer(record.userId)"
+              <a-button
+                type="primary"
+                size="small"
+                :disabled="record.userId === 1"
+                @click="() => handleOpenDrawer(record.userId)"
                 >编辑</a-button
               >
               <a-button
                 type="primary"
                 danger
                 size="small"
+                :disabled="record.userId === 1"
                 @click="() => handleDelete(record.userId)"
                 >删除</a-button
               >

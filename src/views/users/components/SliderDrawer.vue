@@ -59,8 +59,8 @@ const visible = computed({
 })
 
 const handleCancel = () => {
-  formAddRef.value?.resetFields()
   visible.value = false
+  formAddRef.value?.resetFields()
 }
 
 const handleConfirm = async () => {

@@ -89,8 +89,8 @@ const handleConfirm = async (values: PermFormType) => {
     } else {
       await createPerm(values)
     }
-    fetchPermissions()
     drawerVisible.value = false
+    fetchPermissions()
     message.success('操作成功')
   } catch (error) {
     message.error('操作失败')
@@ -154,8 +154,15 @@ const getPermItems = (permissionScopeList: Permission['permissionScope']) => {
           {{ getPermItems(record.permissionScope) }}
         </template>
         <template v-if="column.dataIndex === 'operate'">
+          <!-- 超级管理员暂且写死控制不能修改 -->
           <a-space wrap>
-            <a-button type="primary" size="small" @click="handleOpenDrawer(record)">编辑</a-button>
+            <a-button
+              type="primary"
+              size="small"
+              :disabled="record.id === 1"
+              @click="handleOpenDrawer(record)"
+              >编辑</a-button
+            >
             <a-button
               type="primary"
               danger
